@@ -1,0 +1,31 @@
+iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: 
+        - '*'
+    - Effect: Allow
+      Action:
+        - cognito-idp:*
+      Resource: 
+        - '*'
+    - Effect: Allow
+      Action:
+        - 'lambda:*'
+      Resource: 
+        - '*'
+    - Effect: 'Allow'
+      Action:
+        - 'events:PutEvents'   
+      Resource: 
+        - '*' 
+    - Effect: 'Allow'
+      Action:
+        - 'sqs:*'   
+      Resource: 
+        - '*' 
+    - Effect: "Allow"
+      Action:
+        - "sns:*"
+      Resource: 
+        - '*'

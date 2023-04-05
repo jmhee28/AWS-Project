@@ -1,0 +1,9 @@
+Resources:
+  SuperTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ${self:provider.stage}-calculate-topic
+  deadTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ${self:provider.stage}-dlq-topic

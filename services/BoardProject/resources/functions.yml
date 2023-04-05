@@ -1,0 +1,483 @@
+
+
+#SQS
+sqs:
+  handler: services/sqs/handler.Sqs
+  layers:
+    - ${self:custom.layer}
+  events:
+    - sqs:
+        arn:
+          Fn::GetAtt:
+            - SendQueue
+            - Arn
+    - http:
+          path: v1/sender
+          method: post
+
+
+#SNS
+error:
+  handler: services/sns/error.handler
+  layers:
+      - ${self:custom.layer}
+  events:
+    - sns: 
+        arn: ${self:custom.snsDlqTopicArn}
+        topicName: ${self:provider.stage}-dlq-topic # created immediately          
+calculate:
+  handler: services/sns/calculate.handler
+  layers:
+      - ${self:custom.layer}
+  events:
+    - sns:
+        arn: ${self:custom.snsCalTopicArn}
+        topicName: ${self:provider.stage}-calculate-topic # created immediately
+  onError: ${self:custom.snsDlqTopicArn}
+
+Posts:
+    handler: services/route.Posts
+    layers:
+      - ${self:custom.layer}
+    events:
+    #Post CRUD
+      - http: #create Post
+          path: /posts
+          method: post
+          cors: true
+          documentation:
+            summary: "게시글 생성"
+            description: "create post"
+            tags:
+              - "게시글"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "CreatePost"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "Post"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #get all post
+          path: /posts
+          method: get 
+          cors: true
+          documentation:
+            summary: "전체 게시글 가져오기"
+            description: "get all post"
+            tags:
+              - "게시글"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "PostList"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #delete by ids
+          path: /posts
+          method: delete
+          cors: true
+          documentation:
+            summary: "게시글 삭제"
+            description: "delete post"
+            tags:
+              - "게시글"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "DelPost"
+            methodResponses: 
+              - statusCode: '200'
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #update post by post id
+          path: /posts
+          method: put
+          cors: true
+          documentation:
+            summary: "게시글 수정"
+            description: "update post"
+            tags:
+              - "게시글"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "ModPost"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "Post"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #get post by post id
+          path: /posts/{id}
+          method: get     
+          cors: true
+          documentation:
+            summary: "게시글 단건 조회"
+            description: "get single post" 
+            tags:
+              - "게시글"
+            pathParams:
+              - name: "id"
+                description: "게시글의 id"
+                required: true          
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "Post"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #get comments of postid
+          path: /posts/{id}/comments
+          method: get
+          cors: true
+          documentation:
+            summary: "게시글의 모든 댓글"
+            description: "get post's comments"
+            tags:
+              - "댓글"   
+            pathParams:
+              - name: "id"
+                description: "조회 대상 게시글 id"
+                required: true         
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "CommentList"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+    #Board CRUD
+      - http: #create Post
+          path: /boards
+          method: post
+          cors: true
+          documentation:
+            summary: "게시판 생성"
+            description: "create Board"
+            tags:
+              - "게시판"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "CreateBoard"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                "application/json": "Board"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #get all boards
+          path: /boards
+          method: get
+          cors: true
+          documentation:
+            summary: "게시판 목록 가져오기"
+            description: "get all boards"
+            tags:
+              - "게시판"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels:
+                "application/json":  "BoardList"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #delete by ids
+          path: /boards
+          method: delete
+          cors: true
+          documentation:
+            summary: "게시판 삭제하기"
+            description: "delete board"
+            tags:
+              - "게시판"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "DelBoard"
+            methodResponses: 
+              - statusCode: '200'
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #update
+          path: /boards
+          method: put
+          cors: true
+          documentation:
+            summary: "게시판 수정"
+            description: "update board"
+            tags:
+              - "게시판"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "ModBoard"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels:
+                  "application/json":  "Board"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: 
+          path: /boards/{id}
+          method: get
+          cors: true
+          documentation:
+            summary: "게시판 단건 조회"
+            description: "get Board"
+            tags:
+              - "게시판"
+            pathParams:
+              - name: "id"
+                description: "조회 대상 게시판 id"
+                required: true    
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                "application/json": "Board"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"                  
+      - http: #get board's posts
+          path: /boards/{id}/posts
+          method: get
+          cors: true
+          documentation:
+            summary: "게시판의 모든 게시글"
+            description: "get board's posts"   
+            tags:
+              - "게시판"
+            pathParams:
+              - name: "id"
+                description: "조회 대상 게시판 id"
+                required: true         
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "PostList"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+              
+      #Comment CRUD
+      - http: #create
+          path: /comments
+          method: post
+          cors: true
+          documentation:
+            summary: "댓글 생성"
+            description: "create Comment"
+            tags:
+              - "댓글"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "CreateComment"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "Comment"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #delete by ids
+          path: /comments
+          method: delete
+          cors: true
+          documentation:
+            summary: "댓글 삭제"
+            description: "delete Comment"
+            tags:
+              - "댓글"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "DelComment"
+            methodResponses: 
+              - statusCode: '200'
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #update by id
+          path: /comments
+          method: put
+          cors: true
+          documentation:
+            summary: "댓글 업데이트"
+            description: "update Comment"
+            tags:
+              - "댓글"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "ModComment"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "Comment"
+              - statusCode: "400"
+                responseModels:
+                "application/json": "Errors"
+
+      #USER CRUD
+      - http: #create user
+          path: /users
+          method: post
+          cors: true
+          documentation:
+            summary: "유저 생성"
+            description: "create User"
+            tags:
+              - "유저"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "CreateUser"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "User"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #update
+          path: /users
+          method: put
+          cors: true
+          documentation:
+            summary: "유저 업데이트"
+            description: "update User"
+            tags:
+              - "유저"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "ModUser"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "User"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #get all users
+          path: /users
+          method: get
+          cors: true
+          documentation:
+            summary: "Get All Users"
+            description: "get all users"
+            tags:
+              - "유저"
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "UserList"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: #delete users
+          path: /users
+          method: delete
+          cors: true
+          documentation:
+            summary: "유저 삭제"
+            description: "delete User"
+            tags:
+              - "유저"
+            requestBody:
+              description: "요청시 body 객체"
+            requestModels:
+              "application/json": "DelUser"
+            methodResponses: 
+              - statusCode: '200'
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http: 
+          path: /users/{id}
+          method: get
+          cors: true
+          documentation:
+            summary: "유저 단건조회"
+            description: "get user"
+            tags:
+              - "유저"
+            pathParams:
+              - name: "id"
+                description: "사용자 id"
+                required: true
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "User"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"   
+      - http: #get all user's
+          path: /users/{id}/{categories}
+          method: get
+          cors: true
+          documentation:
+            summary: "유저의 작성물"
+            description: "유저가 작성한 것들"
+            tags:
+              - "유저"
+            pathParams:
+              - name: "id"
+                description: "사용자 id"
+                required: true
+              - name: "categories"
+                description: "Board, Post, Comment 중 하나"
+                required: true
+            methodResponses: 
+              - statusCode: '200'
+                responseModels: 
+                  "application/json": "UserItems"
+              - statusCode: "400"
+                responseModels:
+                  "application/json": "Errors"
+      - http:
+          path: /auth/signup
+          method: post
+          cors: true
+          documentation:
+            summary: "회원가입"
+            description: "회원가입"
+            tags:
+              - "Auth"
+      - http:
+          path: /auth/login
+          method: post
+          cors: true
+          documentation:
+            summary: "로그인"
+            description: "로그인"
+            tags:
+              - "Auth"
+      - http:
+          path: /auth/verification
+          method: post
+          cors: true
+          documentation:
+            summary: "인증"
+            description: "인증"
+            tags:
+              - "Auth"
+      - http:
+          path: /auth/token
+          method: post
+          cors: true
+      

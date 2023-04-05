@@ -1,0 +1,45 @@
+service: Scheduler
+frameworkVersion: '2 || 3'
+
+# 람다배포시 package에서 제외
+package:
+  exclude:
+    - node_modules/**
+    - package.json
+    - package-lock.json
+    - .env
+provider:
+  name: aws
+  runtime: nodejs16.x
+  lambdaHashingVersion: '20201221'
+  region: ap-northeast-2
+  stage: ${opt:stage, 'dev'}
+  environment:
+    #환경변수에 NODE_PATH 설정 node_modules 위치
+    NODE_PATH: "./:/opt/node_modules"
+    STAGE: ${opt:stage, 'dev'}
+    REGION: ${self:provider.region}
+  # iam:
+  #   role:
+  #     statements: ${file(resources/iamRoleStatements.yml):iamRoleStatements}    
+custom:
+  stage: ${opt:stage, 'dev'}
+  layer: 'arn:aws:lambda:${self:provider.region}:${AWS::AccountId}:layer:NodeDataStreamUtils:latest'
+functions:
+  scheduler:
+    handler: eventbridge/handler.handler
+    layers:
+        - ${self:custom.layer}
+    events:
+        - eventBridge: 
+            schedule: cron(0/5 * * * ? *)
+            name: ${self:provider.stage}-CronSchedule
+            description: Trigger Lambda 
+            enabled: false
+
+plugins:
+  - serverless-package-external
+  - serverless-offline
+  - serverless-latest-layer-version
+  - serverless-aws-documentation
+  

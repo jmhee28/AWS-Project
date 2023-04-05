@@ -1,0 +1,355 @@
+# this is general info about the API
+api:
+  info:
+    version: "1"
+    title: "Board Project"
+    description: "Dynamodb Board Project"
+    termsOfService: https://www.google.com
+    contact:
+      name: "Jmhee"
+      url: https://www.serverless.com/framework
+      email: "jmhee3411@gmail.com"
+    license:
+      name: The license
+      url: https://www.github.com
+  tags:
+    - name: 게시판
+      description: Board
+    - name: 게시글
+      description: Post
+    - name: 댓글
+      description: Comment
+    - name: 유저
+      description: 유저
+    - name: Auth
+      description: auth
+# Now we describe all the models that we use
+models:
+  - name: "User"
+    description: "유저모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "유저 ID"
+        email:
+          type: "string"
+          description: "유저 이메일"
+        createdAt:
+          type: "number" 
+          description: "유저 생성일"
+  - name: "UserList"
+    description: "유저모델 목록"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "{{model: User}}"       
+  - name: "CreateUser"
+    description: "신규 유저 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+          description: "유저 이메일"
+      required: 
+        - email
+  - name: "ModUser"
+    description: "유저 수정 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "유저 ID"
+        email:
+          type: "string"
+          description: "유저 이메일"
+      required: 
+        - id
+  - name: "DelUser"
+    description: "유저 삭제 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "array"
+          description: "유저 ID"    
+          items: 
+            type: "string"  
+  - name: "UserItems"
+    description: "유저 작성 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "array"
+          description: "유저 ID"    
+          items: 
+            type: "object" 
+
+
+  - name: "Board"
+    description: "Board 목록 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        categoris:
+          type: "string"
+          description: "카테고리 : Board"
+        id:
+          type: "string"
+          description: "Board ID"
+        createdAt:
+          type: "number"
+          description: "생성일"
+        title:
+          type: "string" 
+          description: "Board 제목"
+        userid:
+          type: "string"
+          description: "작성자 id"
+  - name: "BoardList"
+    description: "Board 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "{{model:Board}}"
+          
+  - name: "CreateBoard"
+    description: "Board 신규 생성 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        title:
+          type: "string" 
+          description: "Board 제목"
+        userid:
+          type: "string"
+          description: "작성자 id"
+      required:
+        - title
+        - userid
+  - name: "ModBoard"
+    description: "Board 수정 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "수정할 Board의 id"
+        title:
+          type: "string" 
+          description: "수정할 Board 제목"
+        
+      required:
+        - id
+        - title
+  - name: "DelBoard"
+    description: "Board 삭제 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "array"
+          description: "삭제할 Board의 id"
+          items: 
+            type: "string"
+
+  - name: "Post"
+    description: "게시글 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        categoris:
+          type: "string"
+          description: "카테고리 : Post"
+        id:
+          type: "string"
+          description: "Post ID"
+        createdAt:
+          type: "number"
+          description: "생성일"
+        title:
+          type: "string" 
+          description: "Post 제목"
+        content:
+          type: "string" 
+          description: "Post 내용"
+        userid:
+          type: "string"
+          description: "작성자 id"
+        upperid:
+          type: "string"
+          description: "post의 board id"
+  - name: "PostList"
+    description: "게시글 목록 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "{{model:Post}}"
+  - name: "CreatePost"
+    description: "게시글 신규 생성 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        title:
+          type: "string" 
+          description: "게시글 제목"
+        content:
+          type: "string" 
+          description: "게시글 내용"
+        userid:
+          type: "string"
+          description: "작성자 id"
+        upperid:
+          type: "string"
+          description: "게시판 id"
+      required:
+        - title
+        - userid
+        - upperid             
+  - name: "ModPost"
+    description: "게시글 수정 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties: 
+        id: 
+          type: "string"
+          description: "수정할 게시글 id"
+        title:
+          type: "string" 
+          description: "Post 제목"
+        content:
+          type: "string" 
+          description: "Post 내용"
+      required:
+        - id
+  - name: "DelPost"
+    description: "게시글 삭제 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties: 
+        id: 
+          type: "array"
+          description: "삭제할 게시글 id"
+          items: 
+            type: "string"
+       
+
+  - name: "Comment"
+    description: "Comment 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        categoris:
+          type: "string"
+          description: "카테고리 : Comment"
+        id:
+          type: "string"
+          description: "Comment ID"
+        createdAt:
+          type: "number"
+          description: "생성일"
+        title:
+          type: "string" 
+          description: "Comment 제목"
+        userid:
+          type: "string"
+          description: "작성자 id"
+        upperid:
+          type: "string"
+          description: " Comment의 post id"
+  - name: "CommentList"
+    description: "댓글 목록 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "{{model:Comment}}"
+              
+  - name: "CreateComment"
+    description: "댓글 신규 생성 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        title:
+          type: "string" 
+          description: "Comment 제목"
+        userid:
+          type: "string"
+          description: "작성자 id"
+        upperid:
+          type: "string"
+          description: " Comment의 post id"
+      required: 
+        - title
+        - userid
+        - upperid   
+  - name: "ModComment"
+    description: "댓글 수정 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "수정할 댓글의 ID"
+        title:
+          type: "string" 
+          description: "수정할 댓글 내영"
+      required:
+        - id
+        - title
+  - name: "DelComment"
+    description: "댓글 삭제 요청 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        id:
+          type: "array"
+          description: "삭제할 댓글의 ID"
+          items: 
+            type: "string"
+    
+  - name: "Errors"
+    description: "에러 모델"
+    contentType: "application/json"
+    schema:
+      type: "object"
+      properties:
+        message: 
+          type: "string"
+          description: "에러 메시지"

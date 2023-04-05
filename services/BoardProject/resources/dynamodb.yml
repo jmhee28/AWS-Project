@@ -1,0 +1,58 @@
+Resources:
+  userTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}-Board-User-Table
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema: # dynamodb의 key를 설정합니다.
+          - AttributeName: id
+            KeyType: HASH    
+  BoardTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:provider.stage}-Board-Table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: categories
+          AttributeType: S
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: userid
+          AttributeType: S
+        - AttributeName: upperid
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: N
+      KeySchema:
+        - AttributeName: categories
+          KeyType: HASH
+        - AttributeName: id
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: userIndex
+          KeySchema:
+            - AttributeName: userid
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: 'ALL'
+        - IndexName: upperIdIndex
+          KeySchema:
+            - AttributeName: upperid
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: 'ALL'
+        - IndexName: categoryIndex
+          KeySchema:
+            - AttributeName: categories
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: 'ALL'

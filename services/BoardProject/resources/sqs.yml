@@ -1,0 +1,15 @@
+Resources:  
+  SendQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${opt:stage, 'dev'}-send
+      RedrivePolicy:
+        deadLetterTargetArn: 
+          Fn::GetAtt:
+            - "SendDlq"
+            - "Arn"
+        maxReceiveCount: 10
+  SendDlq:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:custom.stage}-sendDlq

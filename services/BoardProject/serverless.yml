@@ -1,0 +1,71 @@
+service: BoardProject
+frameworkVersion: '2 || 3'
+
+# 람다배포시 package에서 제외
+package:
+  exclude:
+    - node_modules/**
+    - package.json
+    - package-lock.json
+    - .env
+provider:
+  name: aws
+  runtime: nodejs16.x
+  lambdaHashingVersion: '20201221'
+  region: ap-northeast-2
+  stage: ${opt:stage, 'dev'}
+  environment:
+    #환경변수에 NODE_PATH 설정 node_modules 위치
+    NODE_PATH: "./:/opt/node_modules"
+    USER_POOL_ID: !Ref BoardUserPool
+    CLIENT_ID: !Ref BoardUserPoolClient
+    STAGE: ${opt:stage, 'dev'}
+    REGION: ${self:provider.region}
+    SEND_SQS_URL: ${self:custom.sendSqsUrl}
+    snsCalTopicArn: ${self:custom.snsCalTopicArn}
+  iam:
+    role:
+      statements: ${file(resources/iamRoleStatements.yml):iamRoleStatements}    
+custom:
+  documentation: ${file(resources/documentation.yml)}
+  stage: ${opt:stage, 'dev'}
+  layer: 'arn:aws:lambda:${self:provider.region}:${AWS::AccountId}:layer:NodeDataStreamUtils:latest'
+  snsDlqTopicArn: !Ref deadTopic
+  snsCalTopicArn:  !Ref SuperTopic
+  sendSqsUrl: !Ref SendQueue
+  packageExternal:
+    external:
+      - '../../common'
+functions:
+   - ${file(resources/functions.yml)}
+      
+resources:
+  # DynamoDB
+  - ${file(resources/dynamodb.yml)}
+  # Cognito
+  - ${file(resources/user-pool.yml)}
+  - ${file(resources/identity-pool.yml)}
+  # SNS
+  - ${file(resources/sns.yml)}
+  # SQS
+  - ${file(resources/sqs.yml)}
+
+
+# cors:
+#   origin: '*'
+#   headers:
+#     - Content-Type
+#     - X-Amz-Date
+#     - Authorization
+#     - X-Api-Key
+#     - X-Amz-Security-Token
+#     - X-Amz-User-Agent
+#     - X-Amzn-Trace-Id
+#   allowCredentials: false
+
+plugins:
+  - serverless-package-external
+  - serverless-offline
+  - serverless-latest-layer-version
+  - serverless-aws-documentation
+  
