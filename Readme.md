@@ -1,6 +1,7 @@
 # AWS Project
 - AwS DynamoDB
 - AWS Lambda
+- AWS Cognito
 - AWS EventBridge
 - AWS SNS
 - AWS SQS
@@ -14,5 +15,5 @@
     $ cd services/BoardProject
     $ sls deploy
 ### Third
-#### If you want swagger file:
-`serverless downloadDocumentation --outputFile=filename.ext`.
+#### If you want swagger file
+    $ serverless downloadDocumentation --outputFile=filename.ext.
