@@ -16,4 +16,4 @@
     $ sls deploy
 ### Third
 #### If you want swagger file
-    $ serverless downloadDocumentation --outputFile=filename.ext.
+    $ serverless downloadDocumentation --outputFileName=filename.ext.
