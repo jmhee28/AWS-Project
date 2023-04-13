@@ -7,3 +7,7 @@ jspm_packages
 
 swagger.yml
 .Ds_Store
+.env
+chatGpt.js
+s3list.js
+s3test.js

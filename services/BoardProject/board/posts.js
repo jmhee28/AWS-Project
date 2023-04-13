@@ -44,7 +44,7 @@ const addPosts = async (event) => {
     });
 
     const metadata = await publishSnsTopic(upperid);
-    console.log(metadata);
+    console.log('meta:::', metadata);
     return result;
 };
 

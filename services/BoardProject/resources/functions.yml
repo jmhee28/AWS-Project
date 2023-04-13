@@ -26,7 +26,7 @@ error:
         arn: ${self:custom.snsDlqTopicArn}
         topicName: ${self:provider.stage}-dlq-topic # created immediately          
 calculate:
-  handler: services/sns/calculate.handler
+  handler: sns/calculate.handler
   layers:
       - ${self:custom.layer}
   events:
