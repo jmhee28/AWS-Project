@@ -26,7 +26,8 @@ const htmlToPdf = async (params) => {
 const zipBuffer = async (pdfBuffers, names) => {
     const archive = archiver('zip', { zlib: { level: 9 } });
     const buffers = [];
-
+//. archive.append()를 호출할 때마다 data 이벤트 핸들러가 호출되고 해당 데이터가 버퍼로 전달됩니다.
+// archiver 모듈은 내부적으로 이벤트 기반 아키텍처를 사용하기 때문에 이와 같은 방식으로 작동합니다.
     // 'data' 이벤트 핸들러
     archive.on('data', buffer => buffers.push(buffer));
 
