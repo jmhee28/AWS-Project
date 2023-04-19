@@ -21,6 +21,12 @@ provider:
     REGION: ${self:provider.region}
     OPENAI_API_KEY: ""
     ORGANIZATION: ''
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource:
+        - '*'
   # iam:
   #   role:
   #     statements: ${file(resources/iamRoleStatements.yml):iamRoleStatements}    
@@ -38,6 +44,11 @@ functions:
           path: /generate
           method: post
           cors: true
+      - http:
+          path: /pdf
+          method: post
+          cors: true
+
 
 plugins:
   - serverless-package-external

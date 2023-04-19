@@ -1,0 +1,272 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,700,500" rel="stylesheet" />
+  <style>
+    :root {
+      --black: rgba(0, 0, 0, 1);
+      --mercury: rgba(228, 230, 234, 1);
+      --white: rgba(255, 255, 255, 1);
+      --font-size-xxs: 16px;
+      --font-size-s: 20px;
+      --font-size-m: 24px;
+      --font-size-l: 28px;
+      --font-size-xl: 60px;
+      --font-size-s2: 18px;
+      --font-family-noto_sans_kr: "Noto Sans KR";
+      --font-family-noto_sans_kr-bold: "Noto Sans KR-Bold";
+      --font-family-noto_sans_kr-medium: "Noto Sans KR-Medium";
+      --font-family-noto_sans_kr-regular: "Noto Sans KR-Regular";
+    }
+    .normal-black {
+      color: var(--black);
+      font-family: var(--font-family-noto_sans_kr);
+      font-size: var(--font-size-s);
+      font-weight: 500;
+      font-style: normal;
+    }
+    .bold-black {
+      color: var(--black);
+      font-family: var(--font-family-noto_sans_kr);
+      font-size: var(--font-size-m);
+      font-weight: 700;
+      font-style: normal;
+    }
+    .medium-black {
+      color: var(--black);
+      font-family: var(--font-family-noto_sans_kr);
+      font-size: var(--font-size-s);
+      font-weight: 500;
+      font-style: normal;
+    }
+    .bold-xlarge-black {
+      color: var(--black);
+      font-family: var(--font-family-noto_sans_kr);
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      font-style: normal;
+    }
+    .hidden,
+    .hidden * {
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .overlap-group {
+      background-color: #ffffff;
+      height: 1132px;
+      width: 800px;
+      position: relative;
+    }
+    .certificate-name {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      top: 168px;
+      width: 100%;
+      z-index:999;
+    }
+    .certificate-name-text {
+      align-items: center;
+      display: flex;
+      gap: 20px;
+      position: relative;
+      width: fit-content;
+    }
+    .certificate-date {
+      align-items: flex-start;
+      display: flex;
+      gap: 12px;
+      left: 314px;
+      position: absolute;
+      top: 748px;
+      width: fit-content;
+    }
+    .certificate-seal-container {
+      position: absolute;
+      left: 80px;
+      width: 640px;
+      top: 856px;
+      height: 200px;
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(40%, auto));
+    }
+    .certificate-seal-box {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      position: relative;
+      width: fit-content;
+    }
+    .certificate-content {
+      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      left: 120px;
+      position: absolute;
+      top: 355px;
+      width: fit-content;
+    }
+    .certificate-content-box {
+      align-items: center;
+      display: flex;
+      gap: 20px;
+      position: relative;
+      width: fit-content;
+    }
+
+    .certificate-content-box-left {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      position: relative;
+      width: 92px;
+    }
+    .certificate-content-box-left2 {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      position: relative;
+      width: fit-content;
+    }
+    .certificate-content-box-name {
+      align-items: flex-start;
+      display: flex;
+      flex: 1;
+      position: relative;
+    }
+    .certificate-content-box-name2 {
+      align-items: flex-start;
+      display: flex;
+      /* flex: 1; */
+      position: relative;
+      width: fit-content;
+    }
+    .text {
+      letter-spacing: 0;
+      line-height: normal;
+      margin-top: -1px;
+      position: relative;
+      width: fit-content;
+    }
+    .text-8 {
+      color: var(--black);
+      font-family: var(--font-family-noto_sans_kr);
+      font-size: var(--font-size-m);
+      font-weight: 500;
+      left: 120px;
+      position: absolute;
+      top: 545px;
+      width: 560px;
+    }
+    .text-9 {
+      margin-left: -1px;
+      margin-top: -1px;
+      position: relative;
+      width: fit-content;
+    }
+    .text-1 {
+      position: relative;
+      width: fit-content;
+    }
+    .text-1-1 {
+      position: relative;
+      width: fit-content;
+      letter-spacing: 40px;
+      line-height: normal;
+      padding-left:20px;
+    }
+    .text-2 {
+      letter-spacing: 0;
+      line-height: normal;
+    }
+    .text-12 {
+      flex: 1;
+      margin-top: -1px;
+      position: relative;
+    }
+
+    .outer-rect {
+      box-sizing: border-box;
+      border: 8px solid;
+      border-color: #7f828c;
+      height: 1092px;
+      left: 20px;
+      position: absolute;
+      top: 20px;
+      width: 760px;
+    }
+    .inner-rect {
+      box-sizing: border-box;
+      border: 1px solid;
+      border-color: #bec1c7;
+      height: 1052px;
+      left: 40px;
+      position: absolute;
+      top: 40px;
+      width: 720px;
+    }
+    .image-seal {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+<div class="overlap-group">
+  <div class="certificate-name">
+    <div class="text-1-1 bold-xlarge-black">{{title}}</div>
+  </div>
+  <div class="certificate-content">
+    <div class="certificate-content-box">
+      <div class="certificate-content-box-left">
+        <div class="certificate-content-box-name">
+          <div class="text-12 text-2 medium-black">성</div>
+          <div class="text medium-black">명</div>
+        </div>
+        <div class="text medium-black">:</div>
+      </div>
+      <div class="text normal-black">{{memberName}}</div>
+    </div>
+
+    <div class="certificate-content-box">
+      <div class="certificate-content-box-left2">
+        <div class="certificate-content-box-name2">
+          <div class="text medium-black">교육과정</div>
+        </div>
+        <div class="text medium-black">:</div>
+      </div>
+      <div class="text normal-black">{{productName}}</div>
+    </div>
+
+    <div class="certificate-content-box" style="display: {{durationDisplay}};">
+      <div class="certificate-content-box-left2">
+        <div class="certificate-content-box-name2">
+          <div class="text medium-black">교육기간</div>
+        </div>
+        <div class="text medium-black">:</div>
+      </div>
+      <div class="text normal-black">{{duration}}</div>
+    </div>
+  </div>
+
+  <h1 class="certificate-desc text-8 text-2">{{desc}}</h1>
+
+  <div class="certificate-date">
+    <div class="text medium-black">{{completeDttm}}</div>
+  </div>
+
+  <div class="certificate-seal-container">{{sealTagTxt}}</div>
+
+  <div class="outer-rect"></div>
+  <div class="inner-rect"></div>
+</div>
+</body>
+</html>
