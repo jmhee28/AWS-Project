@@ -2,6 +2,7 @@
   "dependencies": {
     "@sparticuz/chromium": "^112.0.2",
     "amazon-cognito-identity-js": "^6.1.2",
+    "archiver": "^5.3.1",
     "aws-sdk": "^2.1338.0",
     "dynamoose": "^3.1.0",
     "fs": "^0.0.1-security",
@@ -9,6 +10,7 @@
     "puppeteer": "^19.8.5",
     "puppeteer-core": "^19.8.5",
     "readline-sync": "^1.4.10",
+    "stream": "^0.0.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
